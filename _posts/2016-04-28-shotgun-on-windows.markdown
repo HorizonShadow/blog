@@ -5,7 +5,7 @@ date:   2016-04-28 13:40:00 -0300
 categories: windows ruby
 description: How to get shotgun running on windows using the new linux subsystem
 ---
-If you try to run `shotgun` in windows, you'll quickly find it explodes on start up with the error
+If you try to run [Shotgun](https://github.com/rtomayko/shotgun) in windows, you'll quickly find it explodes on start up with the error
 
     .../shotgun:148:in `trap': unsupported signal SIGQUIT (ArgumentError)
   
@@ -13,17 +13,9 @@ This fails because windows doesn't support `fork(2)`, which Shotgun relies on.
     
 With an upcoming update to windows, developers are going to have access to an ubuntu based 
 subsystem through the command line. Through this, you can use Shotgun on your windows system. I'm going
-to assume you already have this installed.
+to assume you already have this installed. (If it's not, [here's how](http://www.pcworld.com/article/3054616/how-to-get-bash-running-on-windows.html).)
 
-# Installing ruby
-
-You're going to run into some problems if you just `apt-get` ruby. To get around this, we're going to 
-use RVM, which is nice to use anyway.
-
-What we're going to do is open up bash, install a whole bunch of development libraries, add mpapis public key,
-fail to install RVM, and then install rvm manually. Sound good? Good.
-
-Type these into command prompt sequentially. I'll explain what they do below.
+# The steps you came here for
 
     bash
     sudo apt-get update
@@ -39,11 +31,21 @@ Type these into command prompt sequentially. I'll explain what they do below.
     rvm use 2.3
     gem install shotgun
     
-First, we open bash. 
+# The explanation you didn't come here for
+    
+You're going to run into some problems if you just `apt-get` ruby. To get around this, we're going to 
+use RVM, which is nice to use anyway.
 
-Next, we update the package list and install a bunch of development packages. 
+What we're going to do is open up bash, install a whole bunch of development libraries, add mpapis public key,
+fail to install RVM, and then install rvm manually. Sound good? Good.
 
-In order to install RVM, we add mpapis public key, and then we download (and try to install) rvm. This is going to fail, but just ignore that. Hop into the newly created `archives` folder of `.rvm`, and 
+So, we open up bash. Update the package list, and then install a bunch of development packages. The packages are just libaries needed to build 
+various programs. `build-essential` is the big one, the others help with installing nokogiri and other gems. 
+
+In order to install RVM, we need to add mpapis public key. After that, we can download (and try to install) rvm. 
+
+Whatever windows is doing to implement bash has some funky permissions. This is going to cause the RVM install to fail, with permission denied on every
+file operation it tries to do. Just ignore it and hop into the newly created `archives` folder of `.rvm`, and 
 unpack that `.tgz` file to expose to installation script directly. Now run that installation script. There will be some errors and warnings here, they don't affect anything. 
 
 Once that's installed, everything's hunky dory. I will note, I had to use `puma` as a web server. `Thin` wouldn't respond to any requests. 
